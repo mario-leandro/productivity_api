@@ -16,6 +16,7 @@ class AuthMiddleware
 
         if (!str_starts_with($auth, 'Bearer ')) {
             Response::json([
+                'success' => false,
                 'message' => 'Token não informado'
             ], 401);
         }
@@ -32,6 +33,7 @@ class AuthMiddleware
         } catch (\Exception $e) {
 
             Response::json([
+                'success' => false,
                 'message' => 'Token inválido'
             ], 401);
         }

@@ -20,14 +20,33 @@ class Router
     {
         $path = parse_url($uri, PHP_URL_PATH);
 
-        $handler = $this->routes[$method][$path] ?? null;
+        $routes = $this->routes[$method] ?? [];
+
+        foreach ($routes as $route => $handler) {
+
+            $pattern = preg_replace('#\{[^/]+\}#', '([^/]+)', $route);
+            $pattern = '#^' . $pattern . '$#';
+
+            if (preg_match($pattern, $path, $matches)) {
+
+                array_shift($matches);
+
+                $handler(...$matches);
+
+                return;
+            }
+        }
 
         if (!$handler) {
             Response::json([
+                'success' => false,
                 'message' => 'Rota não encontrada'
             ], 404);
         }
+    }
 
-        $handler();
+    public function patch(string $path, callable $handler): void
+    {
+        $this->routes['PATCH'][$path] = $handler;
     }
 }

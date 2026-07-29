@@ -12,7 +12,7 @@ class AuthController
 {
     public function register(): void
     {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = Request::json();
 
         if (
             empty($data['name']) ||
@@ -20,6 +20,7 @@ class AuthController
             empty($data['password'])
         ) {
             Response::json([
+                'success' => false,
                 'message' => 'Campos obrigatórios'
             ], 422);
         }
@@ -30,6 +31,7 @@ class AuthController
 
         if ($existing) {
             Response::json([
+                'success' => false,
                 'message' => 'E-mail já cadastrado'
             ], 409);
         }
@@ -43,13 +45,14 @@ class AuthController
         );
 
         Response::json([
+            'success' => true,
             'message' => 'Usuário criado com sucesso'
         ], 201);
     }
 
     public function login(): void
     {
-        $data = json_decode(file_get_contents('php://input'), true);
+        $data = Request::json();
 
         $userModel = new User();
 
@@ -57,6 +60,7 @@ class AuthController
 
         if (!$user || !password_verify($data['password'] ?? '', $user['password'])) {
             Response::json([
+                'success' => false,
                 'message' => 'Credenciais inválidas'
             ], 401);
         }
@@ -70,11 +74,15 @@ class AuthController
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
 
         Response::json([
-            'token' => $token,
-            'user' => [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'email' => $user['email']
+            'success' => true,
+            'message' => 'Login efetuado com sucesso',
+            'data' => [
+                'token' => $token,
+                'user' => [
+                    'id' => $user['id'],
+                    'name' => $user['name'],
+                    'email' => $user['email']
+                ]
             ]
         ]);
     }
