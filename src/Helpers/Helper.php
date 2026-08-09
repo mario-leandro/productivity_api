@@ -6,7 +6,7 @@ class Helper
 {
     public static function logs($message): void
     {
-        $logFile = DIR_LOGS . date("Y-m-d") . ".log";
+        $logFile = "/storage/logs/" . date("Y-m-d") . ".txt";
         file_put_contents($logFile, date("Y-m-d H:i:s") . " - " . $message . "\n", FILE_APPEND);
     }
 

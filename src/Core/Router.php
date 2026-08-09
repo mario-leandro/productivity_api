@@ -37,13 +37,15 @@ class Router
 
                 return;
             }
-        }
 
-        if (!$handler) {
-            Helper::Response([
-                'success' => false,
-                'message' => 'Rota não encontrada'
-            ], 404);
+            if (!$handler) {
+                Helper::Response([
+                    'success' => false,
+                    'message' => 'Rota não encontrada'
+                ], 404);
+
+                Helper::logs("Rota não encontrada: $method $path");
+            }
         }
     }
 
