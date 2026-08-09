@@ -3,23 +3,22 @@
 namespace Src\Controllers;
 
 use Src\Models\User;
-use Src\Core\Response;
 use Firebase\JWT\JWT;
+use Src\Helpers\Helper;
 use Src\Middleware\AuthMiddleware;
-use Src\Core\Request;
 
 class AuthController
 {
     public function register(): void
     {
-        $data = Request::json();
+        $data = Helper::Request();
 
         if (
             empty($data['name']) ||
             empty($data['email']) ||
             empty($data['password'])
         ) {
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'Campos obrigatórios'
             ], 422);
@@ -30,7 +29,7 @@ class AuthController
         $existing = $userModel->findByEmail($data['email']);
 
         if ($existing) {
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'E-mail já cadastrado'
             ], 409);
@@ -44,7 +43,7 @@ class AuthController
             $passwordHash
         );
 
-        Response::json([
+        Helper::Response([
             'success' => true,
             'message' => 'Usuário criado com sucesso'
         ], 201);
@@ -52,14 +51,14 @@ class AuthController
 
     public function login(): void
     {
-        $data = Request::json();
+        $data = Helper::Request();
 
         $userModel = new User();
 
         $user = $userModel->findByEmail($data['email'] ?? '');
 
         if (!$user || !password_verify($data['password'] ?? '', $user['password'])) {
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'Credenciais inválidas'
             ], 401);
@@ -73,7 +72,7 @@ class AuthController
 
         $token = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
 
-        Response::json([
+        Helper::Response([
             'success' => true,
             'message' => 'Login efetuado com sucesso',
             'data' => [
@@ -91,7 +90,7 @@ class AuthController
     {
         $payload = AuthMiddleware::handle();
 
-        Response::json([
+        Helper::Response([
             'id' => $payload['sub'],
             'email' => $payload['email']
         ]);

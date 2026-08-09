@@ -2,6 +2,8 @@
 
 namespace Src\Core;
 
+use Src\Helpers\Helper;
+
 class Router
 {
     private array $routes = [];
@@ -38,7 +40,7 @@ class Router
         }
 
         if (!$handler) {
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'Rota não encontrada'
             ], 404);

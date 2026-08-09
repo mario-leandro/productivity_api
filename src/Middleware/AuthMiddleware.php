@@ -4,7 +4,7 @@ namespace Src\Middleware;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Src\Core\Response;
+use Src\Helpers\Helper;
 
 class AuthMiddleware
 {
@@ -15,7 +15,7 @@ class AuthMiddleware
         $auth = $headers['Authorization'] ?? '';
 
         if (!str_starts_with($auth, 'Bearer ')) {
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'Token não informado'
             ], 401);
@@ -32,7 +32,7 @@ class AuthMiddleware
             return (array) $decoded;
         } catch (\Exception $e) {
 
-            Response::json([
+            Helper::Response([
                 'success' => false,
                 'message' => 'Token inválido'
             ], 401);

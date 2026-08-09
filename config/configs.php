@@ -1,18 +1,8 @@
 <?php
 
-$db_host = $_ENV["DB_HOST"];
-$db_name = $_ENV["DB_NAME"];
-$db_user = $_ENV["DB_USER"];
-$db_pass = $_ENV["DB_PASS"];
-
-define("DB_HOST", $db_host);
-define("DB_NAME", $db_name);
-define("DB_USER", $db_user);
-define("DB_PASS", $db_pass);
+define("DB_HOST", $_ENV["DB_HOST"]);
+define("DB_NAME", $_ENV["DB_NAME"]);
+define("DB_USER", $_ENV["DB_USER"]);
+define("DB_PASS", $_ENV["DB_PASS"]);
 
 define("DIR_LOGS", __DIR__ . "/logs/");
-
-$arr_requests = [
-    "get" => [],
-    "post" => []
-];
