@@ -33,8 +33,8 @@ class Task
             $data['user_id'],
             $data['title'],
             $data['description'] ?? null,
-            $data['status'] ?? 'todo',
-            $data['priority'] ?? 'medium',
+            $data['status'] ?? 'A Fazer',
+            $data['priority'] ?? 'Média',
             $data['due_date'] ?? null,
             $data['position'] ?? 0,
         ]);
@@ -74,7 +74,7 @@ class Task
     public function update(int $id, int $userId, array $data): bool
     {
         $stmt = $this->db->prepare("UPDATE tasks SET title = ?, description = ?, priority = ?, due_date = ? WHERE id = ? AND user_id = ?");
-        return $stmt->execute([$data['title'], $data['description'] ?? null, $data['priority'] ?? 'medium', $data['due_date'] ?? null, $id, $userId]);
+        return $stmt->execute([$data['title'], $data['description'] ?? null, $data['priority'] ?? 'Média', $data['due_date'] ?? null, $id, $userId]);
     }
 
     public function delete(int $id, int $userId): bool
