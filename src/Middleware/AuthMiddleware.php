@@ -38,4 +38,10 @@ class AuthMiddleware
             ], 401);
         }
     }
+
+    public static function getUserId(): int
+    {
+        $decoded = self::handle();
+        return (int) $decoded['user_id'];
+    }
 }
