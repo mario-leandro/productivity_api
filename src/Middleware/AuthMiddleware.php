@@ -42,6 +42,14 @@ class AuthMiddleware
     public static function getUserId(): int
     {
         $decoded = self::handle();
-        return (int) $decoded['user_id'];
+
+        if (!isset($decoded['sub'])) {
+            Helper::Response([
+                'success' => false,
+                'message' => 'Token não possui identificação do usuário'
+            ], 401);
+        }
+
+        return (int) $decoded['sub'];
     }
 }

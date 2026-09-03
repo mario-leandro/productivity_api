@@ -3,7 +3,7 @@
 use Src\Core\Router;
 use Src\Controllers\AuthController;
 use Src\Controllers\TaskController;
-use App\Controllers\NoteController;
+use Src\Controllers\NoteController;
 
 $router = new Router();
 

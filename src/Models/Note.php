@@ -5,7 +5,8 @@ namespace Src\Models;
 use Src\Core\Database;
 use PDO;
 
-class Note {
+class Note
+{
     private PDO $db;
 
     public function __construct()
@@ -20,20 +21,35 @@ class Note {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create($data) {
-        $sql = $this->db->prepare(
-            "INSERT INTO notes 
-            (user_id, title, content, folder_id, is_favorite, is_pinned)
-            VALUES (?, ?, ?, ?, ?, ?)"
+    public function create(array $data): int
+    {
+        $stmt = $this->db->prepare(
+            "INSERT INTO notes
+        (user_id, title, content, folder_id, is_favorite, is_pinned)
+        VALUES (?, ?, ?, ?, ?, ?)"
         );
 
-        $sql->execute([
+        $folderId = empty($data['folder_id'])
+            ? null
+            : (int) $data['folder_id'];
+
+        $isFavorite = filter_var(
+            $data['is_favorite'] ?? false,
+            FILTER_VALIDATE_BOOLEAN
+        ) ? 1 : 0;
+
+        $isPinned = filter_var(
+            $data['is_pinned'] ?? false,
+            FILTER_VALIDATE_BOOLEAN
+        ) ? 1 : 0;
+
+        $stmt->execute([
             $data['user_id'],
             $data['title'],
             $data['content'],
-            $data['folder_id'],
-            $data['is_favorite'],
-            $data['is_pinned'],
+            $folderId,
+            $isFavorite,
+            $isPinned,
         ]);
 
         return (int) $this->db->lastInsertId();
@@ -50,9 +66,9 @@ class Note {
         return $stmt->execute([
             $data['title'],
             $data['content'],
-            $data['folder_id'],
-            $data['is_favorite'],
-            $data['is_pinned'],
+            $data['folder_id'] ?? 0,
+            $data['is_favorite'] ?? false,
+            $data['is_pinned'] ?? false,
             $id,
             $userId,
         ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace Src\Controllers;
 
 use Src\Helpers\Helper;
 use Src\Middleware\AuthMiddleware;
@@ -26,12 +26,12 @@ class NoteController
         $userId = AuthMiddleware::getUserId();
 
         $noteModel = new \Src\Models\Note();
-        $noteId = $noteModel->create(array_merge($data, ['user_id' => $userId]));
+        
+        $noteModel->create(array_merge($data, ['user_id' => $userId]));
 
         Helper::Response([
             'success' => true,
-            'message' => 'Nota criada com sucesso',
-            'note_id' => $noteId
+            'message' => 'Nota criada com sucesso'
         ], 201);
     }
 
