@@ -3,6 +3,7 @@
 namespace Src\Core;
 
 use PDO;
+use Src\Helpers\Helper;
 
 class Database
 {
