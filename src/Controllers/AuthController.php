@@ -91,8 +91,11 @@ class AuthController
         $payload = AuthMiddleware::handle();
 
         Helper::Response([
-            'id' => $payload['sub'],
-            'email' => $payload['email']
+            'success' => true,
+            'data' => [
+                'id' => $payload['sub'],
+                'email' => $payload['email']
+            ]
         ]);
     }
 }

@@ -10,12 +10,18 @@ class Helper
         file_put_contents($logFile, date("Y-m-d H:i:s") . " - " . $message . "\n", FILE_APPEND);
     }
 
-    public static function Response(array $data, int $status = 200): array
+    public static function Response(array $data, int $status = 200): void
     {
-        return [
-            'status' => $status,
-            'data' => $data
-        ];
+        http_response_code($status);
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        echo json_encode(
+            $data,
+            JSON_UNESCAPED_UNICODE
+        );
+
+        exit;
     }
 
     public static function Request(): array
@@ -35,7 +41,7 @@ class Helper
             self::Response([
                 'success' => false,
                 'message' => 'JSON inválido: ' . json_last_error_msg()
-            ], 400);
+            ], false);
 
             exit;
         }
