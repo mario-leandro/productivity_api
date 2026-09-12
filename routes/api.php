@@ -29,6 +29,10 @@ $router->delete('/api/tasks/{id}', [$task, 'destroy']);
 $router->get('/api/notes', [$note, 'index']);
 $router->post('/api/notes', [$note, 'create']);
 $router->put('/api/notes/{id}', [$note, 'update']);
+$router->post('/api/notes/folders', [$note, 'create_folder']);
+$router->put('/api/notes/folders/{id}', [$note, 'update_folder']);
+$router->get('/api/notes/folders', [$note, 'get_folders']);
+$router->delete('/api/notes/folders/{id}', [$note, 'delete_folder']);
 
 
 return $router;

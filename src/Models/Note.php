@@ -15,11 +15,31 @@ class Note
     }
 
     public function allByUser(int $userId): array
-    {
-        $stmt = $this->db->prepare("SELECT * FROM notes WHERE user_id = ? ORDER BY is_pinned DESC, created_at DESC");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+{
+    $stmt = $this->db->prepare(
+        "SELECT * FROM notes
+         WHERE user_id = ?
+         ORDER BY is_pinned DESC, created_at DESC"
+    );
+
+    $stmt->execute([$userId]);
+
+    $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return array_map(function ($note) {
+        $note['id'] = (int) $note['id'];
+        $note['user_id'] = (int) $note['user_id'];
+
+        $note['folder_id'] = $note['folder_id'] !== null
+            ? (int) $note['folder_id']
+            : null;
+
+        $note['is_favorite'] = (bool) $note['is_favorite'];
+        $note['is_pinned'] = (bool) $note['is_pinned'];
+
+        return $note;
+    }, $notes);
+}
 
     public function create(array $data): int
     {
@@ -78,5 +98,46 @@ class Note
     {
         $stmt = $this->db->prepare("DELETE FROM notes WHERE id = ? AND user_id = ?");
         return $stmt->execute([$id, $userId]);
+    }
+    public function create_folder(array $data): int
+    {
+        $stmt = $this->db->prepare(
+            "INSERT INTO note_folders (user_id, name) VALUES (?, ?)"
+        );
+
+        $stmt->execute([
+            $data['user_id'],
+            $data['name'],
+        ]);
+
+        return (int) $this->db->lastInsertId();
+    }
+
+    public function delete_folder(int $id, int $userId): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM note_folders WHERE id = ? AND user_id = ?");
+        return $stmt->execute([$id, $userId]);
+    }
+
+    public function update_folder(int $id, int $userId, array $data): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE note_folders
+            SET name = ?
+            WHERE id = ? AND user_id = ?"
+        );
+
+        return $stmt->execute([
+            $data['name'],
+            $id,
+            $userId,
+        ]);
+    }
+
+    public function get_folders(int $userId): array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM note_folders WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
