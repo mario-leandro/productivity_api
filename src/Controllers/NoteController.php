@@ -26,12 +26,19 @@ class NoteController
         $userId = AuthMiddleware::getUserId();
 
         $noteModel = new \Src\Models\Note();
-        
-        $noteModel->create(array_merge($data, ['user_id' => $userId]));
+
+        $id = $noteModel->create(
+            array_merge($data, [
+                'user_id' => $userId
+            ])
+        );
+
+        $note = $noteModel->findById($id, $userId);
 
         Helper::Response([
             'success' => true,
-            'message' => 'Nota criada com sucesso'
+            'message' => 'Nota criada com sucesso',
+            'data' => $note
         ], 201);
     }
 

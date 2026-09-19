@@ -15,18 +15,51 @@ class Note
     }
 
     public function allByUser(int $userId): array
-{
-    $stmt = $this->db->prepare(
-        "SELECT * FROM notes
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM notes
          WHERE user_id = ?
          ORDER BY is_pinned DESC, created_at DESC"
-    );
+        );
 
-    $stmt->execute([$userId]);
+        $stmt->execute([$userId]);
 
-    $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $notes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    return array_map(function ($note) {
+        return array_map(function ($note) {
+            $note['id'] = (int) $note['id'];
+            $note['user_id'] = (int) $note['user_id'];
+
+            $note['folder_id'] = $note['folder_id'] !== null
+                ? (int) $note['folder_id']
+                : null;
+
+            $note['is_favorite'] = (bool) $note['is_favorite'];
+            $note['is_pinned'] = (bool) $note['is_pinned'];
+
+            return $note;
+        }, $notes);
+    }
+
+    public function findById(int $id, int $userId): ?array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT *
+         FROM notes
+         WHERE id = ? AND user_id = ?"
+        );
+
+        $stmt->execute([
+            $id,
+            $userId
+        ]);
+
+        $note = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$note) {
+            return null;
+        }
+
         $note['id'] = (int) $note['id'];
         $note['user_id'] = (int) $note['user_id'];
 
@@ -38,8 +71,7 @@ class Note
         $note['is_pinned'] = (bool) $note['is_pinned'];
 
         return $note;
-    }, $notes);
-}
+    }
 
     public function create(array $data): int
     {
