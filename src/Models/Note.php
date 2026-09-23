@@ -118,9 +118,9 @@ class Note
         return $stmt->execute([
             $data['title'],
             $data['content'],
-            $data['folder_id'] ?? 0,
-            $data['is_favorite'] ?? false,
-            $data['is_pinned'] ?? false,
+            empty($data['folder_id']) ? null : (int) $data['folder_id'],
+            filter_var($data['is_favorite'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
+            filter_var($data['is_pinned'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
             $id,
             $userId,
         ]);
