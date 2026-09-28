@@ -54,7 +54,7 @@ class TaskController
 
         $data = Helper::Request();
 
-        $allowed = ['todo', 'in_progress', 'done'];
+        $allowed = ['A Fazer', 'Executando', 'Concluído'];
 
         if (!in_array($data['status'] ?? '', $allowed)) {
             Helper::Response([
