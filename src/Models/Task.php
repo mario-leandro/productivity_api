@@ -46,21 +46,15 @@ class Task
         int $id,
         int $userId,
         string $status,
-        ?int $position
     ): bool {
-        if ($position === null) {
-            $position = $this->getNextPosition($userId, $status);
-        }
-
         $stmt = $this->db->prepare(
             "UPDATE tasks
-         SET status = ?, position = ?
+         SET status = ?
          WHERE id = ? AND user_id = ?"
         );
 
         return $stmt->execute([
             $status,
-            $position,
             $id,
             $userId
         ]);
@@ -84,13 +78,5 @@ class Task
     {
         $stmt = $this->db->prepare("DELETE FROM tasks WHERE id = ? AND user_id = ?");
         return $stmt->execute([$id, $userId]);
-    }
-
-    private function getNextPosition(int $userId, string $status): int
-    {
-        $stmt = $this->db->prepare("SELECT MAX(position) as max_position FROM tasks WHERE user_id = ? AND status = ?");
-        $stmt->execute([$userId, $status]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return ($result['max_position'] ?? 0) + 1;
     }
 }

@@ -4,6 +4,8 @@ require_once __DIR__ . "/commom.php";
 
 headers();
 
+global $rotasPublicasZz;
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(["error" => "Método não permitido"]);
@@ -48,12 +50,6 @@ if (!$routes) {
     ]);
     exit;
 }
-
-$rotasPublicas = [
-    "auth/login",
-    "auth/register",
-    "auth/refresh_token"
-];
 
 $rotaAtual = $type . "/" . $action;
 
