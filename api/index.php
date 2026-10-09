@@ -5,6 +5,7 @@ require_once __DIR__ . "/commom.php";
 headers();
 
 global $rotasPublicas;
+global $rotasPublicas;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
