@@ -4,7 +4,7 @@ require_once __DIR__ . "/commom.php";
 
 headers();
 
-global $rotasPublicasZz;
+global $rotasPublicas;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -59,18 +59,6 @@ if (!in_array($rotaAtual, $rotasPublicas)) {
 }
 
 $GLOBALS["REQUEST_DATA"] = $data;
-// var_dump($GLOBALS["REQUEST_DATA"] = $data);
-
-// var_dump([
-//     "type" => $type,
-//     "action" => $action,
-//     "rotaAtual" => $type . "/" . $action,
-//     "routes" => $routes,
-//     "exists" => file_exists($routes)
-// ]);
-// exit;
-
-// echo "entrou aqui";
 
 require_once $routes;
 

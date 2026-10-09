@@ -1,18 +1,9 @@
 <?php
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/../home/walletmotion/");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/");
 $dotenv->load();
 
-define('DB_HOST', $_ENV["DB_HOST"]);
-define('DB_USER', $_ENV["DB_USER"]);
-define('DB_PASS', $_ENV["DB_PASS"]);
-define('DB_NAME', $_ENV["DB_NAME"]);
-
 define("DIR_LOGS", __DIR__ . "/logs/");
-
-define("CHAVE_JWT", $_ENV["JWT_SECRET"]);
-define("JWT_ISS", $_ENV["JWT_ISS"]);
-define("JWT_AUD", $_ENV["JWT_AUD"]);
 
 $rotasPublicas = [
     "auth/login",
@@ -31,13 +22,14 @@ function pathRoutes($type, $action)
             "me" => __DIR__ . "/api/auth/me.php"
         ),
         "tasks" => [
-            "create" => __DIR__ . "/api/tasks/adicionarTask.php",
-            "list" => __DIR__ . "/api/tasks/listarTasks.php",
-            "delete" => __DIR__ . "/api/tasks/delete.php"
+            "create" => __DIR__ . "/api/tasks/criar_tarefa.php",
+            "list" => __DIR__ . "/api/tasks/listar_tarefas.php",
+            "delete" => __DIR__ . "/api/tasks/deletar_tarefa.php",
+            "edit" => __DIR__ . "/api/tasks/editar_tarefa.php"
         ],
         "check_users" => array(
             // "update_user" => __DIR__ . "/api/usuarios/atualizarUsuario.php",
-            "list_users" => __DIR__ . "/api/usuarios/listarUsuarios.php",
+            "list_users" => __DIR__ . "/api/usuarios/listar_usuarios.php",
             // "delete_user" => __DIR__ . "/api/usuarios/excluirUsuario.php"
         ),
         "notes" => [

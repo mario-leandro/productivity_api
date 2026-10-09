@@ -30,11 +30,11 @@ function headers()
 // JWT
 function gerarJwt($usuarioId)
 {
-    $secret_key = CHAVE_JWT;
+    $secret_key = $_ENV['JWT_SECRET'];
 
     $payload = [
-        "iss" => JWT_ISS,
-        "aud" => JWT_AUD,
+        "iss" => $_ENV['JWT_ISS'],
+        "aud" => $_ENV['JWT_AUD'],
         "sub" => $usuarioId,
         "iat" => time(),
         "exp" => time() + (60 * 15)
@@ -71,11 +71,14 @@ function validarJwt()
     $token = $matches[1];
 
     try {
-        $decoded = JWT::decode($token, new Key(CHAVE_JWT, 'HS256'));
+        $decoded = JWT::decode($token, new Key($_ENV['JWT_SECRET'], 'HS256'));
 
         // valida issuer
-        if ($decoded->iss !== JWT_ISS) {
+        if ($decoded->iss !== $_ENV['JWT_ISS']) {
             throw new Exception("Issuer inválido");
+        }
+        if ($decoded->aud !== $_ENV['JWT_AUD']) {
+            throw new Exception("Audience inválido");
         }
 
         return $decoded;
@@ -103,12 +106,6 @@ function autenticar()
         echo json_encode(["error" => $e->getMessage()]);
         exit;
     }
-}
-
-
-function hashToken($token)
-{
-    return hash('sha256', $token);
 }
 
 // Logs
