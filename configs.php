@@ -21,7 +21,7 @@ function pathRoutes($type, $action)
             "refresh_token" => __DIR__ . "/api/refresh/refreshToken.php",
             "me" => __DIR__ . "/api/auth/me.php"
         ),
-        "tasks" => [
+        "task" => [
             "create" => __DIR__ . "/api/tasks/criar_tarefa.php",
             "list" => __DIR__ . "/api/tasks/listar_tarefas.php",
             "delete" => __DIR__ . "/api/tasks/deletar_tarefa.php",
